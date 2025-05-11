@@ -1,8 +1,15 @@
+
+<p align="center">
+    <img alt="img" src="img/crewai_linkedin.svg" width=400 />
+    <h1 align="center">Automating LinkedIn Posts with CrewAI</h1>
+    <h3 align="center">An AI-powered LinkedIn Post Generation System</h3>
+</p>
+
+---
+
 ## 📝 Project Description
 
 This repository contains a comprehensive CrewAI application designed to automate the generation of high-quality LinkedIn posts. The system uses multiple AI agents working together to create content that matches your writing style based on previously published LinkedIn posts.
-
-![Alt text](img/crewai_linkedin.svg)
 
 ### How It Works
 
