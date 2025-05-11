@@ -203,10 +203,6 @@ For advanced customization, you can modify:
 - API keys should be kept confidential and never shared
 - The application stores LinkedIn posts in memory, not in a database, for simplicity
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
