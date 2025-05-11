@@ -1,0 +1,18 @@
+selenium
+lxml
+tiktoken
+beautifulsoup4
+python-dotenv
+crewai  # Trying an older version to avoid conflicts
+crewai-tools
+langchain-core
+langchain-openai
+langchain-mistralai
+fastapi
+uvicorn
+pydantic
+httpx
+python-multipart
+streamlit
+requests
+setuptools
