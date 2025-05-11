@@ -1,16 +1,8 @@
-<p align="center">
-    <img alt="img" src="img/img.png" width=400 />
-    <h1 align="center">Automating LinkedIn Posts with CrewAI</h1>
-    <h3 align="center">An AI-powered LinkedIn Post Generation System</h3>
-</p>
-
----
-
 ## 📝 Project Description
 
 This repository contains a comprehensive CrewAI application designed to automate the generation of high-quality LinkedIn posts. The system uses multiple AI agents working together to create content that matches your writing style based on previously published LinkedIn posts.
 
-![img.png](img.png)
+![Alt text](img/crewai_linkedin.svg)
 
 ### How It Works
 
@@ -31,7 +23,7 @@ The application includes a web interface built with Streamlit and a backend API 
 
 ### API Keys
 - **OpenAI API Key** - For GPT-4.1 model access
-- **Mistral AI API Key** - For Mistral Large model access
+- **Mistral AI API Key** - For Mistral Large model access (Optional)
 - **Serper API Key** - For web search capabilities (used by the Web Researcher agent)
 
 ### LinkedIn Credentials
@@ -60,8 +52,8 @@ See `requirements.txt` or `pyproject.toml` for a complete list of dependencies.
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/crewai_linkedin_post.git
-   cd crewai_linkedin_post
+   git clone https://github.com/AnupCloud/Linkedin_CrewAI.git
+   cd Linkedin_CrewAI
    ```
 
 2. **Set up a virtual environment**
@@ -94,12 +86,12 @@ The project includes support for [uv](https://github.com/astral-sh/uv), a faster
    ```bash
    uv venv
    source .venv/bin/activate  # On Windows, use: .venv\Scripts\activate
-   uv pip install -r requirements.txt
+   uv add -r requirements.txt
    ```
 
    Alternatively, use the lockfile for deterministic installs:
    ```bash
-   uv pip sync uv.lock
+   uv sync uv.lock
    ```
 
 4. **Create an environment file**
@@ -131,7 +123,7 @@ This will execute the full agent workflow and display the generated post in the 
 
 1. **Start the API server**
    ```bash
-   uvicorn api:app --host 0.0.0.0 --port 8001
+   python api.py
    ```
 
 2. **Launch the Streamlit app**
