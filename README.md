@@ -15,7 +15,7 @@ This repository contains a comprehensive CrewAI application designed to automate
 
 The application uses a multi-agent system with three specialized AI agents:
 
-1. **LinkedIn Scraper Ninja**: Scrapes your LinkedIn profile to learn from your previous posts using a custom Selenium tool
+1. **LinkedIn Scraper**: Scrapes your LinkedIn profile to learn from your previous posts using a custom Selenium tool
 2. **Web Researcher**: Gathers relevant information about your chosen topic from the web
 3. **Influencer Agent**: Combines your writing style with researched information to craft an engaging LinkedIn post
 
