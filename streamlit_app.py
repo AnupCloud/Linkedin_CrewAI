@@ -87,12 +87,38 @@ with tab1:
 
         # Display each post with a number and detailed content
         for i, post in enumerate(latest_fetch["posts"]):
-            post_id = f"post_{i + 1}"
+            post_id = post.get('post_id', f"post_{i + 1}")
             title = post.get('title', 'LinkedIn Post')
+            truncated_title = title[:50] + ("..." if len(title) > 50 else "")
 
-            with st.expander(f"Post {i + 1}: {title}"):
-                # Display all available metadata for the post
-                st.markdown(f"**Title:** {title}")
+            # Create an expander for each post
+            with st.expander(f"Post {i + 1}"):
+                # Create a row with columns for title and dropdown
+                col1, col2 = st.columns([4, 1])
+
+                with col1:
+                    st.markdown(f"### {title}")
+
+                with col2:
+                    # Add dropdown menu with actions
+                    if 'actions' in post and post['actions']:
+                        action = st.selectbox(
+                            "Actions",
+                            options=post.get('actions', ["Share", "Copy", "Edit", "Delete"]),
+                            key=f"dropdown_{post_id}"
+                        )
+
+                        # Add an Apply button for the selected action
+                        if st.button("Apply", key=f"apply_{post_id}"):
+                            if action == "Share":
+                                st.success(f"Shared post: {title}")
+                            elif action == "Copy":
+                                st.code(post.get('content', ''), language=None)
+                                st.success("Content copied to clipboard!")
+                            elif action == "Edit":
+                                st.info(f"Edit functionality for post: {title}")
+                            elif action == "Delete":
+                                st.warning(f"Delete functionality for post: {title}")
 
                 # Display timestamp if available
                 if 'timestamp' in post:
@@ -104,11 +130,18 @@ with tab1:
 
                 # Display URL if available
                 if 'url' in post and post['url']:
-                    st.markdown(f"**Link:** [{post['url']}]({post['url']})")
+                    st.markdown(f"**Post URL:** [{post['url']}]({post['url']})")
+
+                # Display content URLs if available
+                if 'content_urls' in post and post['content_urls']:
+                    st.markdown("**Mentioned URLs:**")
+                    for idx, url in enumerate(post['content_urls']):
+                        st.markdown(f"{idx + 1}. [{url}]({url})")
 
                 # Display any other metadata fields
                 for key, value in post.items():
-                    if key not in ['title', 'content', 'timestamp', 'url'] and value:
+                    if key not in ['title', 'content', 'timestamp', 'url', 'content_urls', 'index', 'post_id',
+                                   'actions'] and value:
                         st.markdown(f"**{key.capitalize()}:** {value}")
 
                 # Display full content with proper formatting

@@ -16,7 +16,7 @@ MEDIUM_PAGE_LOAD_WAIT = 7  # Medium wait for pages to load (seconds)
 LONG_PAGE_LOAD_WAIT = 8    # Longer wait for login/complex pages (seconds)
 
 # Security check timing
-SECURITY_CHECK_WAIT = 60  # Time to wait for human to solve security check (seconds)
+SECURITY_CHECK_WAIT = 5  # Time to wait for human to solve security check (seconds)
 
 # Scraping limits
 MAX_FEATURED_ITEMS = 10    # Maximum number of featured items to scrape

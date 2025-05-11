@@ -132,13 +132,18 @@ This will execute the full agent workflow and display the generated post in the 
    ```bash
    python api.py
    ```
-
+---
+![Linkedin Post](img/3.png)
 2. **Launch the Streamlit app**
    ```bash
    streamlit run streamlit_app.py
    ```
 
 3. **Access the web interface** at http://localhost:8501
+![Linkedin Post](img/1.png)
+---
+![Linkedin Post](img/2.png)
+---
 
 ## 📁 Project Structure
 

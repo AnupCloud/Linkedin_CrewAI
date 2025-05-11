@@ -2,8 +2,8 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
+import uuid
 import json
-import time
 from datetime import datetime
 import warnings
 import os
@@ -21,10 +21,11 @@ from config.agents import linkedin_scraper_agent, web_researcher_agent, doppelga
 from tools import scrape_linkedin_posts_tool
 
 
-# Data models
 class LinkedInPost(BaseModel):
     title: str
     content: str
+    post_id: Optional[str] = None
+    actions: Optional[List[str]] = None
 
 
 class HealthResponse(BaseModel):
@@ -78,7 +79,7 @@ async def health_check():
     }
 
 
-# 2. Get LinkedIn Posts endpoint
+# Modify the get_linkedin_posts endpoint to add unique IDs and actions to each post
 @app.get("/linkedin/posts", response_model=List[LinkedInPost], tags=["LinkedIn"])
 async def get_linkedin_posts():
     """Get scraped LinkedIn posts"""
@@ -103,7 +104,7 @@ async def get_linkedin_posts():
         try:
             # Convert CrewOutput to string
             result_str = str(scrape_result)
-            print(f"Raw result from crew.kickoff(): {str(scrape_result)[:100]}...")  # Print first 100 chars
+            print(f"Raw result from crew.kickoff(): {str(scrape_result)[:100]}...")
 
             # Check if the result is empty or indicates no posts were found
             if result_str.strip() in ["[]", ""] or "no linkedin posts available" in result_str.lower():
@@ -111,7 +112,9 @@ async def get_linkedin_posts():
                 profile_name = os.environ.get('LINKEDIN_PROFILE_NAME', 'the target profile')
                 linkedin_posts = [{
                     "title": "LinkedIn Profile Information",
-                    "content": f"This is placeholder content as no posts were found on the LinkedIn profile {profile_name}. You might want to check if the profile has any public posts or try a different profile."
+                    "content": f"This is placeholder content as no posts were found on the LinkedIn profile {profile_name}. You might want to check if the profile has any public posts or try a different profile.",
+                    "post_id": str(uuid.uuid4()),
+                    "actions": ["Share", "Copy", "Edit", "Delete"]
                 }]
                 print("Created placeholder post since LinkedIn scraper returned no posts")
             else:
@@ -150,7 +153,9 @@ async def get_linkedin_posts():
 
                             linkedin_posts.append({
                                 "title": title,
-                                "content": body
+                                "content": body,
+                                "post_id": str(uuid.uuid4()),
+                                "actions": ["Share", "Copy", "Edit", "Delete"]
                             })
                         print(f"Successfully parsed text list with {len(linkedin_posts)} posts")
                     else:
@@ -162,7 +167,9 @@ async def get_linkedin_posts():
                             for num, title, content in matches:
                                 linkedin_posts.append({
                                     "title": title.strip(),
-                                    "content": content.strip()
+                                    "content": content.strip(),
+                                    "post_id": str(uuid.uuid4()),
+                                    "actions": ["Share", "Copy", "Edit", "Delete"]
                                 })
                             print(f"Successfully parsed text list (alt pattern) with {len(linkedin_posts)} posts")
                         else:
@@ -170,7 +177,9 @@ async def get_linkedin_posts():
                             # If all else fails, create a single post from the entire content
                             linkedin_posts = [{
                                 "title": "LinkedIn Post",
-                                "content": result_str.strip()
+                                "content": result_str.strip(),
+                                "post_id": str(uuid.uuid4()),
+                                "actions": ["Share", "Copy", "Edit", "Delete"]
                             }]
 
                 # If linkedin_posts is still empty after all parsing attempts, create a default post
@@ -178,7 +187,9 @@ async def get_linkedin_posts():
                     profile_name = os.environ.get('LINKEDIN_PROFILE_NAME', 'the target profile')
                     linkedin_posts = [{
                         "title": "LinkedIn Profile Information",
-                        "content": f"This is placeholder content as no posts were found on the LinkedIn profile {profile_name}. You might want to check if the profile has any public posts or try a different profile."
+                        "content": f"This is placeholder content as no posts were found on the LinkedIn profile {profile_name}. You might want to check if the profile has any public posts or try a different profile.",
+                        "post_id": str(uuid.uuid4()),
+                        "actions": ["Share", "Copy", "Edit", "Delete"]
                     }]
                     print("Created fallback post after parsing attempts failed")
 
@@ -190,6 +201,13 @@ async def get_linkedin_posts():
                     fingerprint = post.get("title", "") + (post.get("content", "")[:100] if post.get("content") else "")
                     if fingerprint not in seen_content:
                         seen_content.add(fingerprint)
+
+                        # Ensure post has post_id and actions
+                        if "post_id" not in post:
+                            post["post_id"] = str(uuid.uuid4())
+                        if "actions" not in post:
+                            post["actions"] = ["Share", "Copy", "Edit", "Delete"]
+
                         unique_posts.append(post)
 
                 if unique_posts:
@@ -202,8 +220,17 @@ async def get_linkedin_posts():
             profile_name = os.environ.get('LINKEDIN_PROFILE_NAME', 'the target profile')
             linkedin_posts = [{
                 "title": "LinkedIn Profile Information",
-                "content": f"Could not parse LinkedIn posts properly. This is a fallback content generated because an error occurred: {str(e)}"
+                "content": f"Could not parse LinkedIn posts properly. This is a fallback content generated because an error occurred: {str(e)}",
+                "post_id": str(uuid.uuid4()),
+                "actions": ["Share", "Copy", "Edit", "Delete"]
             }]
+
+    # Make sure every post has a post_id and actions, even if they were added from a previous run
+    for post in linkedin_posts:
+        if "post_id" not in post:
+            post["post_id"] = str(uuid.uuid4())
+        if "actions" not in post:
+            post["actions"] = ["Share", "Copy", "Edit", "Delete"]
 
     return linkedin_posts
 
