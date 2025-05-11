@@ -10,6 +10,8 @@
 
 This repository contains a comprehensive CrewAI application designed to automate the generation of high-quality LinkedIn posts. The system uses multiple AI agents working together to create content that matches your writing style based on previously published LinkedIn posts.
 
+![img.png](img.png)
+
 ### How It Works
 
 The application uses a multi-agent system with three specialized AI agents:
